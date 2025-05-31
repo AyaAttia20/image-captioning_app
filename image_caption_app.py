@@ -23,9 +23,10 @@ def main():
     st.sidebar.markdown("""
     Welcome to the **AI Image Captioning App**! 🧠📸
     
-    This tool uses artificial intelligence to **automatically describe images** in natural language. Just upload any photo, and the app will instantly generate a short caption explaining what’s in it.""")
-
-    st.sidebar.info("Powered by `Salesforce/blip-image-captioning-base`")
+    "-----------------------**---------------------------"
+    This tool uses artificial intelligence to **automatically describe images** in natural language. 
+    
+    Just upload any photo, and the app will instantly generate a short caption explaining what’s in it.""")
 
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
     if uploaded_file:
