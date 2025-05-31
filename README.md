@@ -7,4 +7,4 @@ Upload any image and get an AI-generated caption that describes it — automatic
 
 ## 🚀 Demo
 
-Try it live on [Streamlit Cloud]([https://share.streamlit.io/](https://image-captioningapp2.streamlit.app/))  
+Try it live on [Streamlit Cloud](https://image-captioningapp2.streamlit.app/)  
