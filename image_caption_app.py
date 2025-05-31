@@ -18,7 +18,13 @@ def generate_caption(image, processor, model):
 
 def main():
     st.set_page_config(page_title="🖼️ Image Captioning", page_icon="🖼️")
-    st.title("🖼️ Image Captioning (Fast + Small Model)")
+    st.title("🖼️ Image Captioning APP")
+    st.sidebar.title("About This App 🤗")
+    st.sidebar.markdown("""
+    Welcome to the **AI Image Captioning App**! 🧠📸
+    
+    This tool uses artificial intelligence to **automatically describe images** in natural language. Just upload any photo, and the app will instantly generate a short caption explaining what’s in it.""")
+
     st.sidebar.info("Powered by `Salesforce/blip-image-captioning-base`")
 
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
@@ -29,7 +35,7 @@ def main():
         processor, model = load_model()
         with st.spinner("Generating caption..."):
             caption = generate_caption(image, processor, model)
-        st.success("Caption:")
+        st.success("Predicted Caption:")
         st.markdown(f"**{caption}**")
 
 if __name__ == "__main__":
