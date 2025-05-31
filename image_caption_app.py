@@ -1,51 +1,36 @@
-from transformers import Blip2Processor, Blip2ForConditionalGeneration
+from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
 import torch
 import streamlit as st
 
 @st.cache_resource
-def load_blip2():
-    processor = Blip2Processor.from_pretrained("Salesforce/blip2-opt-2.7b")
-    model = Blip2ForConditionalGeneration.from_pretrained(
-        "Salesforce/blip2-opt-2.7b",
-        torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-        device_map="auto"
-    )
+def load_model():
+    processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+    model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+    model.eval()
     return processor, model
 
-def generate_blip2_caption(image, processor, model):
-    prompt = "Describe this image in detail."
-    inputs = processor(images=image, text=prompt, return_tensors="pt").to(model.device)
-
-    generated_ids = model.generate(**inputs, max_new_tokens=50)
-    caption = processor.tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+def generate_caption(image, processor, model):
+    inputs = processor(images=image, return_tensors="pt").to(model.device)
+    out = model.generate(**inputs, max_new_tokens=50)
+    caption = processor.tokenizer.decode(out[0], skip_special_tokens=True)
     return caption
 
 def main():
-    st.set_page_config(page_title="Image Captioning App", page_icon="🖼️")
-    st.title("🖼️ Image Captioning APP")
-    
-    st.sidebar.title("About This App 🤗")
-    st.sidebar.markdown("""
-    This app uses **BLIP-2** with **OPT-2.7B** to generate detailed captions from uploaded images.
-    
-    Powered by Hugging Face Transformers and PyTorch.
-    """)
+    st.set_page_config(page_title="🖼️ Image Captioning", page_icon="🖼️")
+    st.title("🖼️ Image Captioning (Fast + Small Model)")
+    st.sidebar.info("Powered by `Salesforce/blip-image-captioning-base`")
 
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-
-    if uploaded_file is not None:
+    if uploaded_file:
         image = Image.open(uploaded_file).convert("RGB")
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        processor, model = load_blip2()
-        with st.spinner("Generating descriptive caption..."):
-            caption = generate_blip2_caption(image, processor, model)
-            st.success("Generated Caption:")
-            st.markdown(
-                f"<div style='font-size:20px; font-weight:800; color:#4B4B4B; margin-top:10px;'>{caption}</div>",
-                unsafe_allow_html=True
-            )
+        processor, model = load_model()
+        with st.spinner("Generating caption..."):
+            caption = generate_caption(image, processor, model)
+        st.success("Caption:")
+        st.markdown(f"**{caption}**")
 
 if __name__ == "__main__":
     main()
