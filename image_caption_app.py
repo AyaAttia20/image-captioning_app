@@ -23,7 +23,7 @@ def generate_blip2_caption(image, processor, model):
     return caption
 
 def main():
-    st.title("🖼️ Advanced Image Captioning with BLIP-2 FLAN-T5")
+    st.title("🖼️ Image Captioning APP")
     st.sidebar.title("About This App🤗")
     st.sidebar.markdown("""
     This app uses **BLIP-2** Pre-training with the **FLAN-T5** model to generate high-quality image captions from uploaded images.""")
@@ -38,7 +38,7 @@ def main():
         with st.spinner("Generating descriptive caption..."):
             caption = generate_blip2_caption(image, processor, model)
             st.success("Generated Caption:")
-            st.markdown(f"<div style='font-size:20px; font-weight:600; color:#4B4B4B; margin-top:10px;'>{caption}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-size:20px; font-weight:800; color:#4B4B4B; margin-top:10px;'>{caption}</div>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
