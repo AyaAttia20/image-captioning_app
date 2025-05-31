@@ -21,7 +21,7 @@ def main():
     st.title("🖼️ Image Captioning APP")
     st.sidebar.title("About This App 🤗")
     st.sidebar.markdown("""
-    Welcome to the **AI Image Captioning App**📸
+    Welcome to the **AI Image Captioning App**
     
     -----------------------🔍🤖---------------------------
     This tool uses artificial intelligence to **automatically describe images** in natural language. 
