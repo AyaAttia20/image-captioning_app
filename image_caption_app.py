@@ -23,9 +23,10 @@ def main():
     st.sidebar.markdown("""
     Welcome to the **AI Image Captioning App**! 🧠📸
     
-    "-----------------------**---------------------------"
+    -----------------------🔍🤖---------------------------
     This tool uses artificial intelligence to **automatically describe images** in natural language. 
-    
+
+    -----------------------⚒️📄---------------------------
     Just upload any photo, and the app will instantly generate a short caption explaining what’s in it.""")
 
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
@@ -37,7 +38,23 @@ def main():
         with st.spinner("Generating caption..."):
             caption = generate_caption(image, processor, model)
         st.success("Predicted Caption:")
-        st.markdown(f"**{caption}**")
+        st.markdown("#### 📸 AI-Generated Description")
+        st.markdown(
+            f"""
+            <div style='
+                padding: 1rem;
+                background-color: #f0f4f8;
+                border-left: 5px solid #0066cc;
+                font-size: 17px;
+                color: #333;
+                font-weight: 600;
+                border-radius: 5px;
+            '>
+                {caption}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 if __name__ == "__main__":
     main()
