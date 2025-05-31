@@ -4,30 +4,37 @@ import torch
 import streamlit as st
 
 @st.cache_resource
-def load_blip():
-    processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-    model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+def load_blip2():
+    processor = BlipProcessor.from_pretrained("Salesforce/blip2-flan-t5-xl")
+    model = BlipForConditionalGeneration.from_pretrained(
+        "Salesforce/blip2-flan-t5-xl",
+        torch_dtype=torch.float16,
+        device_map="auto"
+    )
     return processor, model
 
-def generate_blip_caption(image, processor, model):
-    inputs = processor(images=image, return_tensors="pt")
-    out = model.generate(**inputs, max_length=30, num_beams=5)
-    caption = processor.decode(out[0], skip_special_tokens=True)
+def generate_blip2_caption(image, processor, model):
+    prompt = "Describe this image in detail."
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    inputs = processor(image, prompt, return_tensors="pt").to(device, torch.float16)
+    output = model.generate(**inputs, max_new_tokens=50)
+    caption = processor.decode(output[0], skip_special_tokens=True)
     return caption
 
 def main():
-    st.title("🖼️ Better Image Caption Generator with BLIP")
+    st.title("🖼️ Advanced Image Captioning with BLIP-2 FLAN-T5")
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
         image = Image.open(uploaded_file).convert("RGB")
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        processor, model = load_blip()
-        with st.spinner("Generating better caption..."):
-            caption = generate_blip_caption(image, processor, model)
-            st.success("Caption:")
-            st.write(f"**{caption}**")
+        processor, model = load_blip2()
+        with st.spinner("Generating descriptive caption..."):
+            caption = generate_blip2_caption(image, processor, model)
+            st.success("Generated Caption:")
+            st.markdown(f"**{caption}**")
 
 if __name__ == "__main__":
     main()
